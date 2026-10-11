@@ -1,0 +1,52 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: servix_qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: servix_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: servix
+      POSTGRES_USER: servix
+      POSTGRES_PASSWORD: servix
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U servix"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: servix_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_URL=postgresql://servix:servix@postgres:5432/servix
+      - QDRANT_URL=http://qdrant:6333
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    volumes:
+      - ./backend:/app
+      - ./docs:/app/docs
+    restart: unless-stopped
+
+volumes:
+  qdrant_data:
+  postgres_data:

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Servix — Monteur</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --blue-light: #eff6ff;
+      --green: #059669;
+      --green-dark: #047857;
+      --green-light: #ecfdf5;
+      --orange: #ea580c;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg);
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 0 20px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--blue);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg { width: 18px; height: 18px; }
+
+    .logo-name {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 2px rgba(34,197,94,0.25);
+    }
+
+    .btn-new {
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 7px;
+      padding: 5px 11px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .btn-new:hover { background: rgba(255,255,255,0.12); color: white; }
+
+    /* ── Action cards ────────────────────────────────────────── */
+    .actions {
+      padding: 16px 16px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .action-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      box-shadow: var(--shadow);
+      font-family: inherit;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .action-card:active { transform: translateY(0); }
+
+    .card-icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .card-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .card-sub {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* ── Messages ────────────────────────────────────────────── */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+    }
+
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-track { background: transparent; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── Empty state ─────────────────────────────────────────── */
+    .empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--muted);
+      gap: 8px;
+    }
+
+    .empty-icon {
+      font-size: 36px;
+      margin-bottom: 4px;
+    }
+
+    .empty h3 { font-size: 15px; font-weight: 600; color: var(--text); }
+    .empty p  { font-size: 13px; line-height: 1.5; max-width: 260px; }
+
+    /* ── Message bubbles ─────────────────────────────────────── */
+    .msg {
+      display: flex;
+      flex-direction: column;
+      max-width: 82%;
+      animation: fadeUp 0.18s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.user      { align-self: flex-end; align-items: flex-end; }
+    .msg.assistant { align-self: flex-start; align-items: flex-start; }
+
+    .bubble {
+      padding: 11px 15px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .msg.user .bubble {
+      background: #0f172a;
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.assistant .bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .bubble strong { font-weight: 600; }
+    .bubble p { margin-bottom: 4px; }
+    .bubble p:last-child { margin-bottom: 0; }
+
+    .bubble .steps { padding-left: 4px; }
+    .bubble .step { display: flex; gap: 8px; margin-bottom: 5px; }
+    .bubble .step-num { min-width: 22px; font-weight: 700; color: var(--muted); }
+
+    .bubble .section { margin-bottom: 10px; }
+    .bubble .section:last-child { margin-bottom: 0; }
+    .bubble .section-label { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+
+    .msg-time {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      padding: 0 4px;
+    }
+
+    /* ── Typing indicator ────────────────────────────────────── */
+    .typing { display: none; align-self: flex-start; }
+    .typing.visible { display: flex; }
+
+    .typing-bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      border-bottom-left-radius: 4px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse {
+      0%,80%,100% { opacity: 0.3; transform: scale(0.8); }
+      40%         { opacity: 1;   transform: scale(1); }
+    }
+
+    /* ── Quick suggestions ───────────────────────────────────── */
+    .suggestions {
+      padding: 0 16px 10px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      flex-shrink: 0;
+      scrollbar-width: none;
+    }
+    .suggestions::-webkit-scrollbar { display: none; }
+
+    .suggestion {
+      white-space: nowrap;
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s;
+      flex-shrink: 0;
+    }
+    .suggestion:hover { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+    /* ── Input area ──────────────────────────────────────────── */
+    .input-area {
+      padding: 0 16px 16px;
+      flex-shrink: 0;
+      background: var(--bg);
+    }
+
+    .input-bar {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 10px 10px 16px;
+      box-shadow: var(--shadow);
+      transition: border-color 0.15s;
+    }
+    .input-bar:focus-within { border-color: var(--blue); }
+
+    textarea {
+      flex: 1;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text);
+      background: transparent;
+      max-height: 100px;
+      min-height: 24px;
+    }
+    textarea::placeholder { color: var(--muted); }
+
+    .send-btn {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      border: none;
+      background: var(--blue);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: opacity 0.15s, background 0.15s;
+    }
+    .send-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .send-btn:not(:disabled):hover { background: var(--blue-dark); }
+    .send-btn svg { width: 16px; height: 16px; }
+
+    /* ── Modals ──────────────────────────────────────────────── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(2px);
+    }
+    .overlay.visible { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 28px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: var(--shadow-lg);
+      animation: fadeUp 0.2s ease;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .modal-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+
+    .form-row { margin-bottom: 14px; }
+
+    .form-row label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .form-row input,
+    .form-row textarea,
+    .form-row select {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 13px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.15s;
+      resize: none;
+    }
+    .form-row input:focus,
+    .form-row textarea:focus,
+    .form-row select:focus { border-color: var(--blue); background: white; }
+
+    .form-row select { cursor: pointer; }
+
+    .modal-footer {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 22px;
+    }
+
+    .btn-cancel {
+      padding: 9px 18px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--muted);
+      transition: border-color 0.15s;
+    }
+    .btn-cancel:hover { border-color: #94a3b8; color: var(--text); }
+
+    .btn-submit {
+      padding: 9px 20px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+
+    .btn-submit.blue  { background: var(--blue);  color: white; }
+    .btn-submit.green { background: var(--green); color: white; }
+    .btn-submit.blue:hover  { background: var(--blue-dark); }
+    .btn-submit.green:hover { background: var(--green-dark); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── Foutcode modal extras ────────────────────────────────── */
+    .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .brand-chip {
+      padding: 8px 4px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--muted);
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .brand-chip:hover { border-color: var(--blue); color: var(--blue); }
+    .brand-chip.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+    /* ── Toast ───────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #0f172a;
+      color: white;
+      padding: 11px 22px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 200;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Scraper log ─────────────────────────────────────────── */
+    .scraper-log {
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      max-height: 160px;
+      overflow-y: auto;
+      color: var(--text);
+      display: none;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .brand-grid { grid-template-columns: repeat(3, 1fr); }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-name">Servix</div>
+        <div class="logo-sub">AI Monteur Assistent</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span>Actief</span>
+      </div>
+      <button class="btn-new" onclick="newConversation()">Nieuw gesprek</button>
+    </div>
+  </header>
+
+  <!-- Action cards -->
+  <div class="actions">
+    <button class="action-card" onclick="openFoutcode()">
+      <div class="card-icon">🔍</div>
+      <div>
+        <div class="card-label">Foutcode<br>Zoeken</div>
+        <div class="card-sub">Merk + code</div>
+      </div>
+    </button>
+    <button class="action-card" onclick="openScraper()">
+      <div class="card-icon">📚</div>
+      <div>
+        <div class="card-label">Handleidingen<br>Laden</div>
+        <div class="card-sub">URL scrapen</div>
+      </div>
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages" id="messages">
+    <div class="empty" id="empty-state">
+      <div class="empty-icon">💬</div>
+      <h3>Hoe kan ik helpen?</h3>
+      <p>Stel een vraag over een foutcode of storing — Servix zoekt het op in de geüploade handleidingen.</p>
+    </div>
+    <div class="typing" id="typing">
+      <div class="typing-bubble">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick suggestions -->
+  <div class="suggestions" id="suggestions">
+    <button class="suggestion" onclick="quickSend(this)">Geen verwarming</button>
+    <button class="suggestion" onclick="quickSend(this)">Waterdruk te laag</button>
+    <button class="suggestion" onclick="quickSend(this)">Reset procedure</button>
+    <button class="suggestion" onclick="quickSend(this)">Ketel maakt lawaai</button>
+    <button class="suggestion" onclick="quickSend(this)">Na onderhoud problemen</button>
+  </div>
+
+  <!-- Input area -->
+  <div class="input-area">
+    <div class="input-bar">
+      <textarea
+        id="input"
+        placeholder="Stel een vraag of beschrijf de storing…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="onInput(this)"
+      ></textarea>
+      <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="19" x2="12" y2="5"/>
+          <polyline points="5 12 12 5 19 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+</div>
+
+<!-- ── Foutcode modal ─────────────────────────────────────────── -->
+<div class="overlay" id="foutcode-overlay" onclick="if(event.target===this)closeFoutcode()">
+  <div class="modal">
+    <div class="modal-title">🔍 Foutcode opzoeken</div>
+    <div class="modal-sub">Kies het merk en voer de foutcode in. Servix zoekt de handleiding op.</div>
+
+    <div class="form-row">
+      <label>Merk</label>
+      <div class="brand-grid" id="brand-grid">
+        <button class="brand-chip" onclick="selectBrand(this)">Vaillant</button>
+        <button class="brand-chip" onclick="selectBrand(this)">Daikin</button>
+        <button class="brand-chip" onclick="selectBrand(this)">Intergas</button>
+        <button class="brand-chip" onclick="selectBrand(this)">Remeha</button>
+        <button class="brand-chip" onclick="selectBrand(this)">Bosch</button>
+        <button class="brand-chip" onclick="selectBrand(this)">Viessmann</button>
+        <button class="brand-chip" onclick="selectBrand(this)">Bulex</button>
+        <button class="brand-chip" onclick="selectBrand(this)">Ferroli</button>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Model <span style="font-weight:400;text-transform:none">(optioneel)</span></label>
+        <input type="text" id="fc-model" placeholder="bv. ecoTEC plus 246" />
+      </div>
+      <div class="form-row">
+        <label>Foutcode</label>
+        <input type="text" id="fc-code" placeholder="bv. F.28" style="font-weight:700;font-size:16px" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeFoutcode()">Annuleren</button>
+      <button class="btn-submit blue" onclick="submitFoutcode()">🔍 Opzoeken</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Scraper modal ──────────────────────────────────────────── -->
+<div class="overlay" id="scraper-overlay" onclick="if(event.target===this)closeScraper()">
+  <div class="modal">
+    <div class="modal-title">📚 Handleidingen automatisch laden</div>
+    <div class="modal-sub">Plak de URL van een downloads- of documentatiepagina. Servix vindt alle PDF's en verwerkt ze.</div>
+
+    <div class="form-row">
+      <label>URL van de downloadspagina</label>
+      <input type="url" id="sc-url" placeholder="https://www.vaillant.be/downloads/…" />
+    </div>
+
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Merk <span style="font-weight:400;text-transform:none">(optioneel)</span></label>
+        <input type="text" id="sc-brand" placeholder="Vaillant" />
+      </div>
+      <div class="form-row">
+        <label>Taal</label>
+        <input type="text" id="sc-lang" placeholder="nl" value="nl" />
+      </div>
+    </div>
+
+    <div class="scraper-log" id="sc-log"></div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeScraper()">Sluiten</button>
+      <button class="btn-submit blue" id="sc-btn" onclick="startScraper()">▶ Starten</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── State ────────────────────────────────────────────────────
+  let sessionId       = genId();
+  let isLoading       = false;
+  let hasMessages     = false;
+  let selectedBrand   = '';
+
+  const $msg    = document.getElementById('messages');
+  const $input  = document.getElementById('input');
+  const $send   = document.getElementById('send-btn');
+  const $typing = document.getElementById('typing');
+  const $empty  = document.getElementById('empty-state');
+
+  function genId() {
+    return 'ui_' + Math.random().toString(36).slice(2, 9);
+  }
+
+  // ── New conversation ─────────────────────────────────────────
+  function newConversation() {
+    sessionId = genId();
+    document.querySelectorAll('.msg').forEach(el => el.remove());
+    $empty.style.display = 'flex';
+    hasMessages = false;
+    $input.focus();
+  }
+
+  // ── Foutcode modal ───────────────────────────────────────────
+  function openFoutcode() {
+    selectedBrand = '';
+    document.querySelectorAll('.brand-chip').forEach(c => c.classList.remove('selected'));
+    document.getElementById('fc-model').value = '';
+    document.getElementById('fc-code').value = '';
+    document.getElementById('foutcode-overlay').classList.add('visible');
+    setTimeout(() => document.getElementById('fc-code').focus(), 100);
+  }
+
+  function closeFoutcode() {
+    document.getElementById('foutcode-overlay').classList.remove('visible');
+  }
+
+  function selectBrand(el) {
+    document.querySelectorAll('.brand-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedBrand = el.textContent;
+  }
+
+  function submitFoutcode() {
+    const code  = document.getElementById('fc-code').value.trim();
+    const model = document.getElementById('fc-model').value.trim();
+    if (!code) { document.getElementById('fc-code').focus(); return; }
+
+    let msg = `Foutcode ${code}`;
+    if (selectedBrand) msg += ` op een ${selectedBrand}`;
+    if (model) msg += ` ${model}`;
+    msg += `. Wat is de oorzaak en hoe los ik dit op?`;
+
+    closeFoutcode();
+    $input.value = msg;
+    onInput($input);
+    sendMessage();
+  }
+
+  // ── Scraper modal ────────────────────────────────────────────
+  function openScraper() {
+    document.getElementById('sc-url').value   = '';
+    document.getElementById('sc-brand').value = '';
+    document.getElementById('sc-log').style.display = 'none';
+    document.getElementById('sc-log').textContent = '';
+    const btn = document.getElementById('sc-btn');
+    btn.disabled = false;
+    btn.textContent = '▶ Starten';
+    document.getElementById('scraper-overlay').classList.add('visible');
+    setTimeout(() => document.getElementById('sc-url').focus(), 100);
+  }
+
+  function closeScraper() {
+    document.getElementById('scraper-overlay').classList.remove('visible');
+  }
+
+  async function startScraper() {
+    const url   = document.getElementById('sc-url').value.trim();
+    const brand = document.getElementById('sc-brand').value.trim();
+    const lang  = document.getElementById('sc-lang').value.trim() || 'nl';
+    if (!url) { document.getElementById('sc-url').focus(); return; }
+
+    const btn = document.getElementById('sc-btn');
+    btn.disabled = true;
+    btn.textContent = 'Bezig…';
+
+    const log = document.getElementById('sc-log');
+    log.style.display = 'block';
+    log.textContent = 'Scraper gestart…\n';
+
+    try {
+      const params = new URLSearchParams({ url, language: lang });
+      if (brand) params.append('brand', brand);
+      const res  = await fetch(`/upload/scrape?${params}`, { method: 'POST' });
+      const data = await res.json();
+
+      if (data.status === 'ok') {
+        log.textContent += `\n✓ Klaar!\n  PDF's gevonden: ${data.found}\n  Ingesteerd: ${data.ingested}\n  Overgeslagen: ${data.skipped}\n  Fouten: ${data.errors}\n  Chunks: ${data.total_chunks}`;
+        showToast(`✓ ${data.ingested} handleidingen ingesteerd`);
+      } else {
+        log.textContent += `\n✗ Fout: ${data.detail || JSON.stringify(data)}`;
+      }
+    } catch (err) {
+      log.textContent += `\n✗ Verbindingsfout: ${err.message}`;
+    }
+
+    btn.disabled = false;
+    btn.textContent = '↺ Opnieuw';
+  }
+
+  // ── Messaging ────────────────────────────────────────────────
+  function quickSend(btn) {
+    $input.value = btn.textContent.trim();
+    onInput($input);
+    sendMessage();
+  }
+
+  function onInput(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+    $send.disabled = !el.value.trim() || isLoading;
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!$send.disabled) sendMessage();
+    }
+  }
+
+  async function sendMessage() {
+    const text = $input.value.trim();
+    if (!text || isLoading) return;
+
+    $empty.style.display = 'none';
+    isLoading = true;
+    hasMessages = true;
+
+    $input.value = '';
+    $input.style.height = 'auto';
+    $send.disabled = true;
+
+    addBubble('user', text);
+    showTyping();
+
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, session_id: sessionId }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      hideTyping();
+      addBubble('assistant', data.response);
+    } catch (err) {
+      hideTyping();
+      addBubble('assistant', '⚠️ Verbindingsfout. Controleer of de backend actief is.');
+    }
+
+    isLoading = false;
+    $send.disabled = !$input.value.trim();
+    $input.focus();
+  }
+
+  // ── Bubble rendering ─────────────────────────────────────────
+  function addBubble(role, text) {
+    const wrap = document.createElement('div');
+    wrap.className = `msg ${role}`;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = formatText(text);
+
+    const ts = document.createElement('div');
+    ts.className = 'msg-time';
+    ts.textContent = timeNow();
+
+    wrap.appendChild(bubble);
+    wrap.appendChild(ts);
+    $msg.insertBefore(wrap, $typing);
+    scrollBottom();
+  }
+
+  function formatText(text) {
+    const sections = text.split(/\n(?=[🔴🔍⚠️🔧💡⚡📖📋])/u);
+    if (sections.length > 1) {
+      return sections.map(s => {
+        const m = s.match(/^([\p{Emoji_Presentation}\p{Extended_Pictographic}]+\s*\*{0,2}[A-ZÁÉÍÓÚÀÈÌÒÙ\s]+\*{0,2}:?)\s*/u);
+        if (m) {
+          const label = m[1].replace(/\*\*/g, '');
+          const body  = s.slice(m[0].length).trim();
+          return `<div class="section"><div class="section-label">${esc(label)}</div>${formatBody(body)}</div>`;
+        }
+        return `<div class="section">${formatBody(s)}</div>`;
+      }).join('');
+    }
+    return formatBody(text);
+  }
+
+  function formatBody(text) {
+    const lines = text.split('\n');
+    let out = '', inList = false;
+    for (const line of lines) {
+      const step = line.match(/^(\d+)\.\s+(.+)/);
+      if (step) {
+        if (!inList) { out += '<div class="steps">'; inList = true; }
+        out += `<div class="step"><span class="step-num">${step[1]}.</span><span>${inlineFmt(step[2])}</span></div>`;
+      } else {
+        if (inList) { out += '</div>'; inList = false; }
+        if (line.trim()) out += `<p>${inlineFmt(line)}</p>`;
+      }
+    }
+    if (inList) out += '</div>';
+    return out;
+  }
+
+  function inlineFmt(t) {
+    return esc(t)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>');
+  }
+
+  function esc(t) {
+    return String(t)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  function showTyping() { $typing.classList.add('visible'); scrollBottom(); }
+  function hideTyping() { $typing.classList.remove('visible'); }
+
+  function scrollBottom() {
+    requestAnimationFrame(() => { $msg.scrollTop = $msg.scrollHeight; });
+  }
+
+  function timeNow() {
+    return new Date().toLocaleTimeString('nl-BE', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Secrets
+.env
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Editor / OS / tooling
+.DS_Store
+.claude/
+CLAUDE.md
+
+# Manufacturer manuals are copyrighted: keep them local only
+docs/**/*.pdf
+docs/**/*.docx
