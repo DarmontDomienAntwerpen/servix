@@ -8,7 +8,7 @@
 ![Qdrant](https://img.shields.io/badge/Qdrant-vector_DB-DC244C)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-15_passing-brightgreen)
+[![Tests](https://github.com/DarmontDomienAntwerpen/servix/actions/workflows/tests.yml/badge.svg)](https://github.com/DarmontDomienAntwerpen/servix/actions/workflows/tests.yml)
 
 > **In short:** a technician standing in front of a broken boiler sends a WhatsApp message like *"Vaillant ecoTEC pro shows F.22"*. Servix searches the manufacturer's manuals and replies within seconds with a diagnosis, likely causes, step-by-step actions, a safety warning, and the manual page it came from. If the manuals don't cover it, Servix says so instead of guessing.
 
