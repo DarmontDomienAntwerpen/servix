@@ -71,7 +71,7 @@ async def chat_endpoint(req: ChatRequest):
         company = await conn.fetchrow("SELECT id FROM companies LIMIT 1")
 
     if not company:
-        raise HTTPException(status_code=503, detail="Geen bedrijf geconfigureerd.")
+        raise HTTPException(status_code=503, detail="No company configured. Run: docker compose exec backend python seed.py")
 
     user = await get_or_create_user(phone_number="ui_tester", company_id=company["id"])
     session_id = req.session_id or f"ui_{date.today().isoformat()}"
@@ -142,7 +142,7 @@ async def receive_webhook(request: Request):
     try:
         pool = await get_pool()
 
-        # Resolve company — default fallback voor nu, multi-tenant routing koppelt dit later
+        # Resolve company: single-tenant fallback for now; per-number tenant routing comes later
         async with pool.acquire() as conn:
             company = await conn.fetchrow("SELECT id FROM companies LIMIT 1")
 
@@ -260,7 +260,7 @@ async def upload_folder(folder: str = "docs"):
 
     base = Path("/app/docs") / folder
     if not base.exists():
-        raise HTTPException(status_code=404, detail=f"Map '{folder}' niet gevonden.")
+        raise HTTPException(status_code=404, detail=f"Folder '{folder}' not found under docs/.")
 
     results = []
     for filepath in base.rglob("*"):

@@ -8,7 +8,7 @@
 ![Qdrant](https://img.shields.io/badge/Qdrant-vector_DB-DC244C)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-10_passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-15_passing-brightgreen)
 
 > **In short:** a technician standing in front of a broken boiler sends a WhatsApp message like *"Vaillant ecoTEC pro shows F.22"*. Servix searches the manufacturer's manuals and replies within seconds with a diagnosis, likely causes, step-by-step actions, a safety warning, and the manual page it came from. If the manuals don't cover it, Servix says so instead of guessing.
 
@@ -25,6 +25,7 @@
 - **Ingests any manual**: PDFs are rendered page by page and read by GPT-4o Vision, so tables, diagrams and error-code lists are captured as well.
 - **Remembers context**: conversation history per technician, stored in PostgreSQL.
 - **Multi-tenant**: each installation company has its own technicians and data.
+- **Bilingual**: Dutch by default, English when the technician writes in English, in both the answers and the chat interface.
 
 ## How it works
 
@@ -77,19 +78,21 @@ Fill in `OPENAI_API_KEY`. The Twilio fields are only needed for WhatsApp.
 ### Run
 ```bash
 docker compose up -d --build
-curl http://localhost:8000/health        # {"status":"ok","postgres":"ok","qdrant":"ok"}
+docker compose exec backend python seed.py   # creates the demo company (first run only)
+curl http://localhost:8000/health            # {"status":"ok","postgres":"ok","qdrant":"ok"}
 ```
-- Web chat: http://localhost:8000
+- Technician chat: http://localhost:8000
+- Manual admin (upload or scrape manuals): http://localhost:8000/boss
 - Upload a manual: place PDFs in `docs/<brand>/` and call `POST /upload/folder?folder=<brand>`, or upload one through `POST /upload`.
 
-Manufacturer manuals are copyrighted, so they are not included in this repository.
+Manufacturer manuals are copyrighted, so they are not included in this repository. Servix is built for Flemish technicians: it answers in Dutch by default and in English when the question is in English. The technician chat follows the browser language (Dutch or English; force one with `?lang=nl` or `?lang=en`).
 
 ## Running the tests
 ```bash
 pip install pytest
 pytest
 ```
-The tests cover the output guardrails: source enforcement, safety warnings, web disclaimers and length limits.
+The tests cover the output guardrails (source enforcement, safety warnings, web disclaimers, length limits) and language detection.
 
 ## Project structure
 ```
@@ -100,6 +103,7 @@ servix/
 │   ├── rag.py           # Multi-query, three-tier retrieval from Qdrant
 │   ├── ingest.py        # PDF/DOCX/image ingestion with GPT-4o Vision
 │   ├── guardrails.py    # Output validation (sources, safety, length)
+│   ├── language.py      # Detects whether to answer in Dutch or English
 │   ├── memory.py        # Conversation and customer history (PostgreSQL)
 │   ├── whatsapp.py      # Twilio WhatsApp integration
 │   ├── prompts.py       # All system prompts in one place

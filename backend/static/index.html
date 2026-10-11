@@ -561,15 +561,15 @@
       </div>
       <div>
         <div class="logo-name">Servix</div>
-        <div class="logo-sub">AI Monteur Assistent</div>
+        <div class="logo-sub" data-i18n="subtitle">AI Monteur Assistent</div>
       </div>
     </div>
     <div class="header-right">
       <div class="status-pill">
         <div class="status-dot"></div>
-        <span>Actief</span>
+        <span data-i18n="status">Actief</span>
       </div>
-      <button class="btn-new" onclick="newConversation()">Nieuw gesprek</button>
+      <button class="btn-new" onclick="newConversation()" data-i18n="newChat">Nieuw gesprek</button>
     </div>
   </header>
 
@@ -578,15 +578,15 @@
     <button class="action-card" onclick="openFoutcode()">
       <div class="card-icon">🔍</div>
       <div>
-        <div class="card-label">Foutcode<br>Zoeken</div>
-        <div class="card-sub">Merk + code</div>
+        <div class="card-label" data-i18n-html="cardFault">Foutcode<br>Zoeken</div>
+        <div class="card-sub" data-i18n="cardFaultSub">Merk + code</div>
       </div>
     </button>
     <button class="action-card" onclick="openScraper()">
       <div class="card-icon">📚</div>
       <div>
-        <div class="card-label">Handleidingen<br>Laden</div>
-        <div class="card-sub">URL scrapen</div>
+        <div class="card-label" data-i18n-html="cardManuals">Handleidingen<br>Laden</div>
+        <div class="card-sub" data-i18n="cardManualsSub">URL scrapen</div>
       </div>
     </button>
   </div>
@@ -595,8 +595,8 @@
   <div class="messages" id="messages">
     <div class="empty" id="empty-state">
       <div class="empty-icon">💬</div>
-      <h3>Hoe kan ik helpen?</h3>
-      <p>Stel een vraag over een foutcode of storing — Servix zoekt het op in de geüploade handleidingen.</p>
+      <h3 data-i18n="emptyTitle">Hoe kan ik helpen?</h3>
+      <p data-i18n="emptyText">Stel een vraag over een foutcode of storing — Servix zoekt het op in de geüploade handleidingen.</p>
     </div>
     <div class="typing" id="typing">
       <div class="typing-bubble">
@@ -607,11 +607,11 @@
 
   <!-- Quick suggestions -->
   <div class="suggestions" id="suggestions">
-    <button class="suggestion" onclick="quickSend(this)">Geen verwarming</button>
-    <button class="suggestion" onclick="quickSend(this)">Waterdruk te laag</button>
-    <button class="suggestion" onclick="quickSend(this)">Reset procedure</button>
-    <button class="suggestion" onclick="quickSend(this)">Ketel maakt lawaai</button>
-    <button class="suggestion" onclick="quickSend(this)">Na onderhoud problemen</button>
+    <button class="suggestion" onclick="quickSend(this)" data-i18n="chip0">Geen verwarming</button>
+    <button class="suggestion" onclick="quickSend(this)" data-i18n="chip1">Waterdruk te laag</button>
+    <button class="suggestion" onclick="quickSend(this)" data-i18n="chip2">Reset procedure</button>
+    <button class="suggestion" onclick="quickSend(this)" data-i18n="chip3">Ketel maakt lawaai</button>
+    <button class="suggestion" onclick="quickSend(this)" data-i18n="chip4">Na onderhoud problemen</button>
   </div>
 
   <!-- Input area -->
@@ -620,6 +620,7 @@
       <textarea
         id="input"
         placeholder="Stel een vraag of beschrijf de storing…"
+        data-i18n-placeholder="inputPlaceholder"
         rows="1"
         onkeydown="handleKey(event)"
         oninput="onInput(this)"
@@ -640,11 +641,11 @@
 <!-- ── Foutcode modal ─────────────────────────────────────────── -->
 <div class="overlay" id="foutcode-overlay" onclick="if(event.target===this)closeFoutcode()">
   <div class="modal">
-    <div class="modal-title">🔍 Foutcode opzoeken</div>
-    <div class="modal-sub">Kies het merk en voer de foutcode in. Servix zoekt de handleiding op.</div>
+    <div class="modal-title" data-i18n="faultTitle">🔍 Foutcode opzoeken</div>
+    <div class="modal-sub" data-i18n="faultSub">Kies het merk en voer de foutcode in. Servix zoekt de handleiding op.</div>
 
     <div class="form-row">
-      <label>Merk</label>
+      <label data-i18n="brand">Merk</label>
       <div class="brand-grid" id="brand-grid">
         <button class="brand-chip" onclick="selectBrand(this)">Vaillant</button>
         <button class="brand-chip" onclick="selectBrand(this)">Daikin</button>
@@ -659,18 +660,18 @@
 
     <div class="form-grid">
       <div class="form-row">
-        <label>Model <span style="font-weight:400;text-transform:none">(optioneel)</span></label>
-        <input type="text" id="fc-model" placeholder="bv. ecoTEC plus 246" />
+        <label><span data-i18n="model">Model</span> <span style="font-weight:400;text-transform:none" data-i18n="optional">(optioneel)</span></label>
+        <input type="text" id="fc-model" placeholder="bv. ecoTEC plus 246" data-i18n-placeholder="modelPlaceholder" />
       </div>
       <div class="form-row">
-        <label>Foutcode</label>
-        <input type="text" id="fc-code" placeholder="bv. F.28" style="font-weight:700;font-size:16px" />
+        <label data-i18n="faultCode">Foutcode</label>
+        <input type="text" id="fc-code" placeholder="bv. F.28" data-i18n-placeholder="codePlaceholder" style="font-weight:700;font-size:16px" />
       </div>
     </div>
 
     <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeFoutcode()">Annuleren</button>
-      <button class="btn-submit blue" onclick="submitFoutcode()">🔍 Opzoeken</button>
+      <button class="btn-cancel" onclick="closeFoutcode()" data-i18n="cancel">Annuleren</button>
+      <button class="btn-submit blue" onclick="submitFoutcode()" data-i18n="lookup">🔍 Opzoeken</button>
     </div>
   </div>
 </div>
@@ -679,21 +680,21 @@
 <!-- ── Scraper modal ──────────────────────────────────────────── -->
 <div class="overlay" id="scraper-overlay" onclick="if(event.target===this)closeScraper()">
   <div class="modal">
-    <div class="modal-title">📚 Handleidingen automatisch laden</div>
-    <div class="modal-sub">Plak de URL van een downloads- of documentatiepagina. Servix vindt alle PDF's en verwerkt ze.</div>
+    <div class="modal-title" data-i18n="scrapeTitle">📚 Handleidingen automatisch laden</div>
+    <div class="modal-sub" data-i18n="scrapeSub">Plak de URL van een downloads- of documentatiepagina. Servix vindt alle PDF's en verwerkt ze.</div>
 
     <div class="form-row">
-      <label>URL van de downloadspagina</label>
+      <label data-i18n="scrapeUrl">URL van de downloadspagina</label>
       <input type="url" id="sc-url" placeholder="https://www.vaillant.be/downloads/…" />
     </div>
 
     <div class="form-grid">
       <div class="form-row">
-        <label>Merk <span style="font-weight:400;text-transform:none">(optioneel)</span></label>
+        <label><span data-i18n="brand">Merk</span> <span style="font-weight:400;text-transform:none" data-i18n="optional">(optioneel)</span></label>
         <input type="text" id="sc-brand" placeholder="Vaillant" />
       </div>
       <div class="form-row">
-        <label>Taal</label>
+        <label data-i18n="language">Taal</label>
         <input type="text" id="sc-lang" placeholder="nl" value="nl" />
       </div>
     </div>
@@ -701,13 +702,77 @@
     <div class="scraper-log" id="sc-log"></div>
 
     <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeScraper()">Sluiten</button>
-      <button class="btn-submit blue" id="sc-btn" onclick="startScraper()">▶ Starten</button>
+      <button class="btn-cancel" onclick="closeScraper()" data-i18n="close">Sluiten</button>
+      <button class="btn-submit blue" id="sc-btn" onclick="startScraper()" data-i18n="start">▶ Starten</button>
     </div>
   </div>
 </div>
 
 <script>
+  // ── Interface language ──────────────────────────────────────────────────────
+  // Dutch for Dutch-language browsers (the Flemish technicians Servix is built for),
+  // English for everyone else. Override with ?lang=nl or ?lang=en.
+  const I18N = {
+    nl: {
+      subtitle: 'AI Monteur Assistent', status: 'Actief', newChat: 'Nieuw gesprek',
+      cardFault: 'Foutcode<br>Zoeken', cardFaultSub: 'Merk + code',
+      cardManuals: 'Handleidingen<br>Laden', cardManualsSub: 'URL scrapen',
+      emptyTitle: 'Hoe kan ik helpen?',
+      emptyText: 'Stel een vraag over een foutcode of storing — Servix zoekt het op in de geüploade handleidingen.',
+      chip0: 'Geen verwarming', chip1: 'Waterdruk te laag', chip2: 'Reset procedure',
+      chip3: 'Ketel maakt lawaai', chip4: 'Na onderhoud problemen',
+      inputPlaceholder: 'Stel een vraag of beschrijf de storing…',
+      faultTitle: '🔍 Foutcode opzoeken',
+      faultSub: 'Kies het merk en voer de foutcode in. Servix zoekt de handleiding op.',
+      brand: 'Merk', model: 'Model', optional: '(optioneel)', faultCode: 'Foutcode',
+      modelPlaceholder: 'bv. ecoTEC plus 246', codePlaceholder: 'bv. F.28',
+      cancel: 'Annuleren', lookup: '🔍 Opzoeken',
+      scrapeTitle: '📚 Handleidingen automatisch laden',
+      scrapeSub: "Plak de URL van een downloads- of documentatiepagina. Servix vindt alle PDF's en verwerkt ze.",
+      scrapeUrl: 'URL van de downloadspagina', language: 'Taal', close: 'Sluiten',
+      start: '▶ Starten', busy: 'Bezig…', retry: '↺ Opnieuw', scraperStarted: 'Scraper gestart…',
+      done: 'Klaar!', pdfsFound: "PDF's gevonden", ingested: 'Ingesteerd', skipped: 'Overgeslagen',
+      errors: 'Fouten', error: 'Fout', connectionFailed: 'Verbindingsfout',
+      connectionError: '⚠️ Verbindingsfout. Controleer of de backend actief is.',
+      manualsIngested: 'handleidingen ingesteerd',
+      on: 'op een', faultQuestion: '. Wat is de oorzaak en hoe los ik dit op?',
+    },
+    en: {
+      subtitle: 'AI Technician Assistant', status: 'Online', newChat: 'New chat',
+      cardFault: 'Look up<br>Fault Code', cardFaultSub: 'Brand + code',
+      cardManuals: 'Load<br>Manuals', cardManualsSub: 'Scrape a URL',
+      emptyTitle: 'How can I help?',
+      emptyText: 'Ask about a fault code or malfunction — Servix looks it up in the uploaded service manuals.',
+      chip0: 'No heating', chip1: 'Water pressure too low', chip2: 'Reset procedure',
+      chip3: 'Boiler is noisy', chip4: 'Problems after maintenance',
+      inputPlaceholder: 'Ask a question or describe the fault…',
+      faultTitle: '🔍 Look up a fault code',
+      faultSub: 'Choose the brand and enter the fault code. Servix searches the manual.',
+      brand: 'Brand', model: 'Model', optional: '(optional)', faultCode: 'Fault code',
+      modelPlaceholder: 'e.g. ecoTEC plus 246', codePlaceholder: 'e.g. F.28',
+      cancel: 'Cancel', lookup: '🔍 Look up',
+      scrapeTitle: '📚 Load manuals automatically',
+      scrapeSub: 'Paste the URL of a downloads or documentation page. Servix finds every PDF and processes it.',
+      scrapeUrl: 'URL of the downloads page', language: 'Language', close: 'Close',
+      start: '▶ Start', busy: 'Working…', retry: '↺ Retry', scraperStarted: 'Scraper started…',
+      done: 'Done!', pdfsFound: 'PDFs found', ingested: 'Ingested', skipped: 'Skipped',
+      errors: 'Errors', error: 'Error', connectionFailed: 'Connection error',
+      connectionError: '⚠️ Connection error. Check that the backend is running.',
+      manualsIngested: 'manuals ingested',
+      on: 'on a', faultQuestion: '. What is the cause and how do I fix it?',
+    },
+  };
+  const LANG = new URLSearchParams(location.search).get('lang')
+    || ((navigator.language || 'en').toLowerCase().startsWith('nl') ? 'nl' : 'en');
+  const t = (key) => (I18N[LANG] && I18N[LANG][key]) || I18N.nl[key] || key;
+
+  function applyI18n() {
+    document.documentElement.lang = LANG;
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  }
+  applyI18n();
   // ── State ────────────────────────────────────────────────────
   let sessionId       = genId();
   let isLoading       = false;
@@ -758,10 +823,10 @@
     const model = document.getElementById('fc-model').value.trim();
     if (!code) { document.getElementById('fc-code').focus(); return; }
 
-    let msg = `Foutcode ${code}`;
-    if (selectedBrand) msg += ` op een ${selectedBrand}`;
+    let msg = `${t('faultCode')} ${code}`;
+    if (selectedBrand) msg += ` ${t('on')} ${selectedBrand}`;
     if (model) msg += ` ${model}`;
-    msg += `. Wat is de oorzaak en hoe los ik dit op?`;
+    msg += t('faultQuestion');
 
     closeFoutcode();
     $input.value = msg;
@@ -777,7 +842,7 @@
     document.getElementById('sc-log').textContent = '';
     const btn = document.getElementById('sc-btn');
     btn.disabled = false;
-    btn.textContent = '▶ Starten';
+    btn.textContent = t('start');
     document.getElementById('scraper-overlay').classList.add('visible');
     setTimeout(() => document.getElementById('sc-url').focus(), 100);
   }
@@ -794,11 +859,11 @@
 
     const btn = document.getElementById('sc-btn');
     btn.disabled = true;
-    btn.textContent = 'Bezig…';
+    btn.textContent = t('busy');
 
     const log = document.getElementById('sc-log');
     log.style.display = 'block';
-    log.textContent = 'Scraper gestart…\n';
+    log.textContent = t('scraperStarted') + '\n';
 
     try {
       const params = new URLSearchParams({ url, language: lang });
@@ -807,17 +872,17 @@
       const data = await res.json();
 
       if (data.status === 'ok') {
-        log.textContent += `\n✓ Klaar!\n  PDF's gevonden: ${data.found}\n  Ingesteerd: ${data.ingested}\n  Overgeslagen: ${data.skipped}\n  Fouten: ${data.errors}\n  Chunks: ${data.total_chunks}`;
-        showToast(`✓ ${data.ingested} handleidingen ingesteerd`);
+        log.textContent += `\n✓ ${t('done')}\n  ${t('pdfsFound')}: ${data.found}\n  ${t('ingested')}: ${data.ingested}\n  ${t('skipped')}: ${data.skipped}\n  ${t('errors')}: ${data.errors}\n  Chunks: ${data.total_chunks}`;
+        showToast(`✓ ${data.ingested} ${t('manualsIngested')}`);
       } else {
-        log.textContent += `\n✗ Fout: ${data.detail || JSON.stringify(data)}`;
+        log.textContent += `\n✗ ${t('error')}: ${data.detail || JSON.stringify(data)}`;
       }
     } catch (err) {
-      log.textContent += `\n✗ Verbindingsfout: ${err.message}`;
+      log.textContent += `\n✗ ${t('connectionFailed')}: ${err.message}`;
     }
 
     btn.disabled = false;
-    btn.textContent = '↺ Opnieuw';
+    btn.textContent = t('retry');
   }
 
   // ── Messaging ────────────────────────────────────────────────
@@ -867,7 +932,7 @@
       addBubble('assistant', data.response);
     } catch (err) {
       hideTyping();
-      addBubble('assistant', '⚠️ Verbindingsfout. Controleer of de backend actief is.');
+      addBubble('assistant', t('connectionError'));
     }
 
     isLoading = false;
@@ -947,14 +1012,14 @@
   }
 
   function timeNow() {
-    return new Date().toLocaleTimeString('nl-BE', { hour: '2-digit', minute: '2-digit' });
+    return new Date().toLocaleTimeString(LANG === 'nl' ? 'nl-BE' : 'en-GB', { hour: '2-digit', minute: '2-digit' });
   }
 
   function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3200);
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3200);
   }
 </script>
 </body>

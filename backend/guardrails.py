@@ -15,6 +15,9 @@ DANGEROUS_KEYWORDS = [
     "230v", "400v", "condensator",
     "brandgevaar", "ontploffing", "koolmonoxide",
     "aardlek",
+    # English equivalents (Servix answers in the technician's language)
+    "gas line", "gas pipe", "gas valve", "high voltage", "capacitor",
+    "fire hazard", "explosion", "carbon monoxide",
 ]
 
 SAFETY_WARNING = (
@@ -32,13 +35,13 @@ WEB_DISCLAIMER = (
 
 def _has_source_citation(text: str) -> bool:
     """Return True if the response contains a source reference."""
-    return bool(re.search(r"(📖\s*BRON|bron:|handleiding|pagina\s*\d+|p\.\s*\d+)", text, re.IGNORECASE))
+    return bool(re.search(r"(📖\s*(BRON|SOURCE)|bron:|source:|handleiding|manual|pagina\s*\d+|page\s*\d+|p\.\s*\d+)", text, re.IGNORECASE))
 
 
 def _needs_safety_warning(text: str) -> bool:
     """Return True if the response mentions dangerous actions without a safety warning."""
     has_danger = any(kw in text.lower() for kw in DANGEROUS_KEYWORDS)
-    has_warning = bool(re.search(r"(⚡|veiligheid|waarschuwing|voorzichtig|schakel uit)", text, re.IGNORECASE))
+    has_warning = bool(re.search(r"(⚡|veiligheid|waarschuwing|voorzichtig|schakel uit|safety|warning|caution)", text, re.IGNORECASE))
     return has_danger and not has_warning
 
 

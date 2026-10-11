@@ -1,8 +1,8 @@
 """
-seed.py — Demo data voor Servix.
-Maakt het testbedrijf aan zodat /chat en /webhook een company_id hebben om aan te koppelen.
+seed.py — Demo data for Servix.
+Creates a demo installation company so /chat and /webhook have a company_id to attach to.
 
-Gebruik: python seed.py
+Usage: docker compose exec backend python seed.py
 """
 
 import asyncio
@@ -17,7 +17,7 @@ async def seed():
     url = os.getenv("POSTGRES_URL", "postgresql://servix:servix@localhost:5432/servix")
     conn = await asyncpg.connect(url)
 
-    print("🌱 Servix seed gestart...\n")
+    print("🌱 Seeding Servix demo data...\n")
 
     company = await conn.fetchrow("""
         INSERT INTO companies (name, slug)
@@ -25,20 +25,20 @@ async def seed():
         ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name
         RETURNING id
     """)
-    print(f"✓ Bedrijf: Installaties Vermeersch (id={company['id']})")
+    print(f"✓ Company: Installaties Vermeersch (id={company['id']})")
 
     await conn.close()
 
     print("""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎉  Seed klaar!
+🎉  Seed complete!
 
-   Monteur UI       →  http://localhost:8000
-   Handleidingen    →  http://localhost:8000/boss
+   Technician chat  →  http://localhost:8000
+   Manual admin     →  http://localhost:8000/boss
 
-   Demo-flow:
-   1. Open /boss → upload of scrape een handleiding
-   2. Open /     → stel een vraag over een foutcode
+   Demo flow:
+   1. Open /boss → upload or scrape a manual
+   2. Open /     → ask about a fault code
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """)
 

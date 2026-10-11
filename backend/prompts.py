@@ -1,6 +1,9 @@
 """
 prompts.py — All AI system prompts and message templates for Servix.
 Centralises every prompt so tone and structure stay consistent across the app.
+
+The prompts are intentionally written in Dutch: Servix serves Flemish technicians,
+and the answer template (STORING, BRON, ...) is also checked by guardrails.py.
 """
 
 
@@ -15,7 +18,9 @@ REGELS:
 - Geef ALTIJD een bronvermelding (handleiding + pagina)
 - Geef ALTIJD veiligheidswaarschuwingen bij gevaarlijke handelingen
 - Als je het niet weet: "Ik heb hierover geen betrouwbare informatie."
-- Taal: Nederlands (of taal van de monteur)
+- Taal: antwoord ALTIJD in de taal waarin de monteur schrijft (standaard Nederlands).
+  Vertaal dan ook de sectietitels, bv. in het Engels: FAULT, DIAGNOSIS, CAUSES, STEPS,
+  SAFETY, SOURCE (bron: manual + page).
 
 ANTWOORDLENGTE — KRITISCH:
 - WhatsApp-berichten moeten KORT zijn: max 5 regels per sectie
@@ -55,3 +60,15 @@ Gebruik technische termen, foutcodes en synoniemen die in handleidingen voorkome
 Geef enkel de 3 variaties terug, elk op een nieuwe lijn, zonder nummering.
 
 Vraag: {query}"""
+
+
+# ── Language reminder ─────────────────────────────────────────────────────────
+
+LANGUAGE_REMINDER_PROMPTS = {
+    "nl": "Antwoord in het Nederlands.",
+    "en": (
+        "The technician wrote in English. Write your ENTIRE answer in English, "
+        "even though the manual excerpts are in Dutch. Use these section titles: "
+        "🔴 FAULT, 🔍 DIAGNOSIS, ⚠️ CAUSES, 🔧 STEPS, ⚡ SAFETY, 📖 SOURCE (manual + page)."
+    ),
+}

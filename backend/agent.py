@@ -13,7 +13,8 @@ from duckduckgo_search import DDGS
 from rag import search_manual
 from guardrails import validate_response, is_conversational
 from memory import get_conversation_history, save_message
-from prompts import AGENT_SYSTEM_PROMPT
+from language import detect_language
+from prompts import AGENT_SYSTEM_PROMPT, LANGUAGE_REMINDER_PROMPTS
 
 logger = logging.getLogger(__name__)
 openai = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -21,7 +22,15 @@ openai = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 MAX_TOOL_ITERATIONS = 5
 
 
+def language_reminder(user_message: str) -> dict:
+    """Last system message on every call. Without it, the Dutch system prompt and
+    Dutch manual excerpts pull answers to Dutch even when the technician writes English."""
+    key = detect_language(user_message)
+    return {"role": "system", "content": LANGUAGE_REMINDER_PROMPTS[key]}
+
+
 # ── Tool definitions ──────────────────────────────────────────────────────────
+# Descriptions are in Dutch, matching the system prompt in prompts.py.
 
 TOOLS = [
     {
@@ -241,7 +250,7 @@ async def run_agent(
     for iteration in range(MAX_TOOL_ITERATIONS):
         response = await openai.chat.completions.create(
             model="gpt-4o",
-            messages=messages,
+            messages=messages + [language_reminder(user_message)],
             tools=TOOLS,
             tool_choice="auto",
         )

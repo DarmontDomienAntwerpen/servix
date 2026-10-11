@@ -48,3 +48,13 @@ def test_greeting_is_conversational():
 
 def test_fault_code_is_never_conversational():
     assert not is_conversational("Hallo, ketel geeft storing F.22")
+
+
+def test_english_answer_with_source_passes():
+    text = "🔴 FAULT: F.22\n🔧 STEPS: top up to 1.5 bar\n📖 SOURCE: Vaillant ecoTEC pro manual, page 8"
+    assert validate_response(text) == text
+
+
+def test_english_dangerous_work_gets_safety_warning():
+    text = "Disconnect the gas line. 📖 SOURCE: manual page 4"
+    assert validate_response(text).endswith(SAFETY_WARNING)

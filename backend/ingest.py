@@ -304,7 +304,7 @@ async def ingest_file(
     """
     ext = Path(file.filename).suffix.lower()
     if ext not in SUPPORTED_EXTENSIONS:
-        raise ValueError(f"Bestandstype '{ext}' niet ondersteund. Gebruik: {', '.join(SUPPORTED_EXTENSIONS)}")
+        raise ValueError(f"File type '{ext}' is not supported. Use one of: {', '.join(SUPPORTED_EXTENSIONS)}")
 
     # Auto-detect brand from folder structure if not explicitly provided
     if not brand:
