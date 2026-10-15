@@ -24,7 +24,7 @@
 - **Falls back to the web only with permission**, with a clear disclaimer that the information is unofficial.
 - **Ingests any manual**: PDFs are rendered page by page and read by GPT-4o Vision, so tables, diagrams and error-code lists are captured as well.
 - **Remembers context**: conversation history per technician, stored in PostgreSQL.
-- **Multi-tenant**: each installation company has its own technicians and data.
+- **Multi-tenant data model**: each installation company has its own technicians and data.
 - **Bilingual**: Dutch by default, English when the technician writes in English, in both the answers and the chat interface.
 
 ## How it works
@@ -119,6 +119,8 @@ servix/
 
 ## Status & next steps
 A working prototype, tested end to end with real manuals. Next steps: work orders and device history per customer (already in the architecture design), and voice messages.
+
+The web chat and the document-upload endpoints are a local, single-user demo: they have no login and share one demo session. WhatsApp traffic is separated per technician. Before running it for real customers, the next step is authentication on the admin and upload endpoints.
 
 ## Author
 **Domien Darmont**, AI Engineer, Antwerp, Belgium  
