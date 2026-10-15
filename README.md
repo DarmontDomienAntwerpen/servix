@@ -123,7 +123,7 @@ A working prototype, tested end to end with real manuals. Next steps: work order
 The web chat and the document-upload endpoints are a local, single-user demo: they have no login and share one demo session. WhatsApp traffic is separated per technician. Before running it for real customers, the next step is authentication on the admin and upload endpoints.
 
 ## Author
-**Domien Darmont**, AI Engineer, Antwerp, Belgium  
+**Domien Darmont** — Operational leader building applied AI systems, Antwerp, Belgium  
 GitHub: [@DomienDarmontAntwerpen](https://github.com/DomienDarmontAntwerpen)  
 LinkedIn: [Domien Darmont](https://www.linkedin.com/in/domien-darmont-b53b7640b/)
 
