@@ -125,7 +125,7 @@ A working prototype, tested end to end with real manuals. Next steps: work order
 GitHub: [@DomienDarmontAntwerpen](https://github.com/DomienDarmontAntwerpen)  
 LinkedIn: [Domien Darmont](https://www.linkedin.com/in/domien-darmont-b53b7640b/)
 
-A live demo or more information is available on request.
+A live demo, the project presentation or answers to any questions are available on request.
 
 ## License
 © 2026 Domien Darmont. All rights reserved.
