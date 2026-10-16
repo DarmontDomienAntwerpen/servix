@@ -125,7 +125,7 @@ The web chat and the document-upload endpoints are a local, single-user demo: th
 ## Author
 **Domien Darmont** — Operational leader building applied AI systems, Antwerp, Belgium  
 GitHub: [@DomienDarmontAntwerpen](https://github.com/DomienDarmontAntwerpen)  
-LinkedIn: [Domien Darmont](https://www.linkedin.com/in/domien-darmont-b53b7640b/)
+LinkedIn: [Domien Darmont](https://www.linkedin.com/in/domiendarmont/)
 
 A live demo, the project presentation or answers to any questions are available on request.
 
